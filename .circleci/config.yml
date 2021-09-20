@@ -4,14 +4,17 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      # Add parameter here   
+      workflowId:
+        type: string  
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            # Your code here
-            exit 1
+            echo "removing env.: <<parameters.workflowId>> "
+            aws cloudformation delete-stack --stack-name udapeople-backend-prod-<<parameters.workflowId>>
+            aws s3 rm s3://udapeople-prod-<<parameters.workflowId>> --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-prod-<<parameters.workflowId>>
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
