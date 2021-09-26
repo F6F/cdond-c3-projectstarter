@@ -28,7 +28,7 @@ commands:
               npm i
               npm run migration:revert
             fi
-                     
+
 jobs:
   build-frontend:
     docker:
@@ -40,8 +40,8 @@ jobs:
       - run:
           name: Build front-end
           command: |
-          - run: npm i --prefix frontend
-          - run: npm run lint --prefix frontend
+            npm i --prefix frontend
+            npm run lint --prefix frontend
       - persist_to_workspace:
           root: ~/
           paths:
@@ -52,8 +52,8 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: npm i --prefix backend
-      - run: npm run lint --prefix backend
+        npm i --prefix backend
+        npm run lint --prefix backend
       - persist_to_workspace:
           root: ~/
           paths:
