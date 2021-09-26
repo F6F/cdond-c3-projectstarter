@@ -261,7 +261,7 @@ jobs:
 #            
 #
 workflows:
-  default:
+  superDepoly:
     jobs:
       - build-frontend
       - build-backend
