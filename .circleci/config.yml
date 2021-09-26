@@ -55,8 +55,8 @@ jobs:
       - run: 
         name: Build back-end
         command: |
-        npm i --prefix backend
-        npm run lint --prefix backend
+          npm i --prefix backend
+          npm run lint --prefix backend
       - persist_to_workspace:
           root: ~/
           paths:
