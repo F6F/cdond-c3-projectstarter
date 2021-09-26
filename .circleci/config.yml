@@ -59,8 +59,8 @@ jobs:
             npm run lint --prefix backend
       - persist_to_workspace:
           root: ~/
-#          paths:
-#            - project/backend/node_modules
+          paths:
+            - project/backend/node_modules
 #  
 #  test-frontend:
 #    docker:
