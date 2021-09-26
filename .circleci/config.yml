@@ -47,7 +47,7 @@ jobs:
           paths:
             - project/frontend/node_modules
 
-  build_backend:
+  build-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -264,7 +264,7 @@ workflows:
   superDepoly:
     jobs:
       - build-frontend
-      - build-backend
+      - build_backend
 #      - test-frontend:
 #          requires: [build-frontend]
 #      - test-backend:
