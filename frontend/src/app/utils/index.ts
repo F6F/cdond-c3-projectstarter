@@ -23,14 +23,8 @@ export const confirmDialog = Swal.mixin({
   buttonsStyling: false,
 });
 
-export const showNotification = (
-  message: string, options: ToastOptions
-) => toast(message, options);
+export const showNotification = (message: string, options: ToastOptions) => toast(message, options);
 
-export const showErrorNotification = (
-  message: string
-) => showNotification(message, { className: style.toaster });
+export const showErrorNotification = (message: string ) => showNotification(message, { className: style.toaster });
 
-export const showSuccessNotification = (
-  message: string
-) => showNotification(message, { type: "success" });
+export const showSuccessNotification = (message: string) => showNotification(message, { type: 'success' });
