@@ -41,9 +41,8 @@ jobs:
           name: Build front-end
           command: |
             npm i --prefix frontend
-            npm install 
+            npm audit fix
             npm run build
-            npm run lint --prefix frontend
       - persist_to_workspace:
           root: ~/
           paths:
@@ -58,7 +57,8 @@ jobs:
           name: Build back-end
           command: |
             npm i --prefix backend
-            npm run lint --prefix backend
+            npm audit fix
+            npm run build
       - persist_to_workspace:
           root: ~/
           paths:
