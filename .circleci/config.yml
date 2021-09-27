@@ -59,12 +59,14 @@ jobs:
           command: |
             cd backend
             npm i
-            npm audit fix
+            npm audit fix --force
             npm run build
       - persist_to_workspace:
           root: ~/
           paths:
             - project/backend/node_modules
+      - store_artifacts:
+        path: /home/circleci/.npm/_logs/
 #  
 #  test-frontend:
 #    docker:
