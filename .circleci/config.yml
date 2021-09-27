@@ -41,6 +41,8 @@ jobs:
           name: Build front-end
           command: |
             npm i --prefix frontend
+            npm install 
+            npm run build
             npm run lint --prefix frontend
       - persist_to_workspace:
           root: ~/
