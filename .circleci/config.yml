@@ -100,7 +100,7 @@ jobs:
     steps:
       - checkout
       - run: rm package-lock.json
-      - run: npm update
+      - run: npm install
       - run: npm audit --audit-level=critical --prefix backend
 #
 #  deploy-infrastructure:
