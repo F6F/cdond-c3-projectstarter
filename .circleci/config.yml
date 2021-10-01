@@ -67,7 +67,7 @@ jobs:
       - store_artifacts:
           path: /home/circleci/.npm/_logs/
   
-  test_frontend:
+  test-frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -77,7 +77,7 @@ jobs:
       - run: npm i --prefix frontend
       - run: npm run test --prefix frontend
 
-  test_backend:
+  test-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
