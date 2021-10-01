@@ -99,7 +99,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - npm install
+      - run: npm install
       - run: npm audit --audit-level=critical --prefix backend
 #
 #  deploy-infrastructure:
