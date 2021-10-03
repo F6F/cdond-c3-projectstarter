@@ -99,7 +99,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: rm package-lock.json
+      #- run: rm package-lock.json
       - run: npm install
       - run: npm audit --audit-level=critical --prefix backend
 #
