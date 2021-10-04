@@ -102,7 +102,7 @@ jobs:
     steps:
       - checkout
       - run: npm audit fix --audit-level=critical --force
-      c- run: npm audit --audit-level=critical --prefix backend
+      - run: npm audit --audit-level=critical --prefix backend
 #
 #  deploy-infrastructure:
 #    docker:
