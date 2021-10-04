@@ -103,7 +103,7 @@ jobs:
       #- run: rm package-lock.json
       - run: npm install
       - run: npm audit --audit-level=critical --prefix backend
-      - run: npm audit fix --audit-level=critical --force
+      - run: npm audit fix --audit-level=critical --force --prefix backend
 #
 #  deploy-infrastructure:
 #    docker:
