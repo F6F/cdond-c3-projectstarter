@@ -93,16 +93,16 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: npm audit --audit-level=critical --force --prefix frontend
       - run: npm audit fix --audit-level=critical --force 
+      - run: npm audit --audit-level=critical --force --prefix frontend
 
   scan-backend:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - run: npm audit --audit-level=critical --prefix backend
-      - run: npm audit fix --audit-level=critical --force 
+      - run: npm audit fix --audit-level=critical --force
+      c- run: npm audit --audit-level=critical --prefix backend
 #
 #  deploy-infrastructure:
 #    docker:
