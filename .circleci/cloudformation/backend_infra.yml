@@ -31,7 +31,7 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: udacity
+      KeyName: TobiKey
       ImageId: ami-0e63910157459607d
       Tags:
         - Key: Name
