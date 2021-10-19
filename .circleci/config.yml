@@ -117,6 +117,8 @@ jobs:
               --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --stack-name udapeople-backend-prod-${CIRCLE_WORKFLOW_ID:0:7}
       - run:
+          name: save ip
+          command: |
             BACKEND_AWS_PUBLIC_IP=$(aws ec2 describe-instances \
               --filters "Name=tag:Name,Values=backend-prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
