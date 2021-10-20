@@ -103,7 +103,7 @@ jobs:
       - checkout
       - run: 
         name: scan Backen
-        command: |    
+        command: |
           cd backend
           npm i
           npm run build
