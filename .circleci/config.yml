@@ -140,7 +140,7 @@ jobs:
             - project/.circleci/outputs/backendIP.txt
             - project/.circleci/ansible/inventory.txt
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+          workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   deploy_frontend_infrastructure:
     docker:
@@ -155,7 +155,7 @@ jobs:
               --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --stack-name udapeople-frontend-prod-${CIRCLE_WORKFLOW_ID:0:7}
       - destroy-environment:
-          workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+          workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 #
 #  configure-infrastructure:
