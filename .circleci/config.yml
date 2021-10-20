@@ -139,7 +139,7 @@ jobs:
           paths:
             - project/.circleci/outputs/backendIP.txt
             - project/.circleci/ansible/inventory.txt
-      - destroy_environment:
+      - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
   deploy_frontend_infrastructure:
@@ -154,7 +154,7 @@ jobs:
               --template-file .circleci/cloudformation/frontend_infra.yml \
               --parameter-overrides ID="prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --stack-name udapeople-frontend-prod-${CIRCLE_WORKFLOW_ID:0:7}
-      - destroy_environment:
+      - destroy-environment:
           workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 #
