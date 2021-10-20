@@ -101,7 +101,7 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      -run: 
+      - run: 
         name: scan Backen
         command: |    
           cd backend
