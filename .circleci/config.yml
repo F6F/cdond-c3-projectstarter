@@ -192,7 +192,7 @@ jobs:
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/playbook.yml
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - undo_migrations
+      #- undo_migrations
 
       # Checkout code from git
 #      # Add ssh keys with fingerprint
