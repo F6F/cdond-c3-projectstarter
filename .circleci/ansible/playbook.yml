@@ -6,9 +6,9 @@
       become: true
     - role: setup
       become: true
-    - role: deploy_backend
+    - role: configure-server
       become: true
-    - role: configure_node_exporter
+    - role: configure-prometheus-node-exporter
       become: true
   vars:
     environment_config:
