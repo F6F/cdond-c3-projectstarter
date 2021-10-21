@@ -6,7 +6,7 @@
       become: true
     - role: configure-server
       become: true
-    - role: deploy_backend
+    - role: deploy-backend
       become: true
     - role: configure-prometheus-node-exporter
       become: true
