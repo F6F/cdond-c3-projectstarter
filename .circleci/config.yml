@@ -142,7 +142,7 @@ jobs:
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
 
-  deploy_frontend_infrastructure:
+  deploy-frontend-infrastructure:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -158,7 +158,7 @@ jobs:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 
-  configure-backend-infrastructure:
+  deploy-backend-artifact:
     docker:
       - image: python:3.7-alpine3.11
     steps:
@@ -194,21 +194,55 @@ jobs:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
       #- undo_migrations
 
-      # Checkout code from git
-#      # Add ssh keys with fingerprint
-#      # attach workspace
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # Your code here
-#            exit 1
-#      - run:
-#          name: Configure server
-#          command: |
-#            # Your code here
-#            exit 1
-#      # Here's where you will add some code to rollback on failure      
-#
+  package-frontend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update curl nodejs npm
+            pip install awscli
+      - run:
+          name: Package frontend app
+          command: |
+            export API_URL=`cat .circleci/outputs/backend_url.txt`
+            echo "API_URL: $API_URL"
+            cd ~/project/frontend
+            npm i
+            npm install typescript@rc
+            npm run build
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/frontend/dist
+      - destroy-environment:
+          workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
+      #- undo_migrations
+
+  deploy-frontend-artifact:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apk add --update curl tar
+            pip install awscli
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Copy frontend to s3 bucket.
+          command: |
+            cd ~/project/frontend
+            aws s3 cp dist s3://udapeople-prod-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment:
+          workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
+
 #  run-migrations:
 #    docker:
 #      # Docker image here that supports NodeJS
@@ -335,15 +369,20 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
+      - package-frontend:
+          requires: [deploy-frontend-infrastructure]
       - deploy-infrastructure-backend:
           requires: [test-backend]
-      - deploy_frontend_infrastructure:
+      - deploy-frontend-infrastructure:
           requires: 
             - scan-frontend
             - build-frontend
-      - configure-backend-infrastructure:
+      - deploy-backend-artifact:
           requires:
             - deploy-infrastructure-backend
+      - deploy-frontend-artifact:
+          requires:
+            - package-frontend
            
 #      - configure-infrastructure:
 #          requires: [deploy-infrastructure]
