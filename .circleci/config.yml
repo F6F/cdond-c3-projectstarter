@@ -347,7 +347,7 @@ workflows:
           requires:
             - deploy-frontend-artifact
       - smoke-test-backend:
-          requites:
+          requires:
             - deploy-backend-artifact
       - cloudfront-update:
           requires:
