@@ -192,7 +192,7 @@ jobs:
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/playbook.yml
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-      #- undo_migrations
+      - revert-migrations
 
   package-frontend:
     docker:
@@ -221,7 +221,7 @@ jobs:
             - project/frontend/dist
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-      #- undo_migrations
+      - revert-migrations
 
   deploy-frontend-artifact:
     docker:
@@ -293,7 +293,7 @@ jobs:
             fi
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-#      - undo_migrations
+      - revert-migrations
 
   smoke-test-backend:
     docker:
@@ -314,7 +314,7 @@ jobs:
             curl -s $API_URL/api/status
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-#      - undo_migrations
+      - revert-migrations
 
   cloudfront-update:
     docker:
@@ -343,7 +343,7 @@ jobs:
             fi
       - destroy-environment:
           workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-#      - undo_migrations
+      - revert-migrations
 
 
 workflows:
@@ -370,12 +370,18 @@ workflows:
       - deploy-backend-artifact:
           requires:
             - deploy-infrastructure-backend
+      - run-migrations
+          requires:
+            - test-backend
+            - test-frontend
       - deploy-frontend-artifact:
           requires:
             - package-frontend
+            - run-migrations
       - smoke-test-frontend:
           requires:
             - deploy-frontend-artifact
+            - run-migrations
       - smoke-test-backend:
           requires:
             - deploy-backend-artifact
