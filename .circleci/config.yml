@@ -370,7 +370,7 @@ workflows:
       - deploy-backend-artifact:
           requires:
             - deploy-infrastructure-backend
-      - run-migrations
+      - run-migrations:
           requires:
             - test-backend
             - test-frontend
