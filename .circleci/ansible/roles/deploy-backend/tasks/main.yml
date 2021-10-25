@@ -1,5 +1,6 @@
 
 ---
+
 - name: "backend app directory"
   file:
     path: ~/backend_app
@@ -13,16 +14,22 @@
 - name: "Unzip backend files to correct directory"
   shell: |
     cd ~/backend_app
+    pwd
+    ls -la 
     unzip dist.zip
+    ls -la
     rm -rf dist.zip
 - name: "Install dependencies for project"
   shell: |
     cd ~/backend_app
     npm install
+    ls -la
 - name: "Executing node"
   shell: |
     export
     cd ~/backend_app
+    pwd 
+    ls -la
     pm2 start main.js
   register: execute_node
 
