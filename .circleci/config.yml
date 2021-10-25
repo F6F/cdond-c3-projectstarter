@@ -209,7 +209,7 @@ jobs:
       - run:
           name: Package frontend app
           command: |
-            export API_URL=`cat .circleci/outputs/backend_url.txt`
+            export API_URL=`cat .circleci/outputs/backendIP.txt`
             echo "API_URL: $API_URL"
             cd ~/project/frontend
             npm i
@@ -310,7 +310,7 @@ jobs:
       - run:
           name: Test backend app.
           command: |
-            API_URL=`cat .circleci/outputs/backend_url.txt`
+            API_URL=`cat .circleci/outputs/backendIP.txt`
             echo $API_URL
             curl -s $API_URL/api/status
       - destroy-environment:
