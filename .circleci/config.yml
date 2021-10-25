@@ -314,7 +314,7 @@ jobs:
             echo $API_URL
             curl -s $API_URL/api/status
       - destroy-environment:
-          workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
+          #workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations
 
   cloudfront-update:
@@ -386,6 +386,8 @@ workflows:
       - smoke-test-backend:
           requires:
             - deploy-backend-artifact
+            - run-migrations
+
       - cloudfront-update:
           requires:
             - smoke-test-frontend
