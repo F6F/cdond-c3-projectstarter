@@ -313,9 +313,9 @@ jobs:
             API_URL=`cat .circleci/outputs/backendIP.txt`
             echo $API_URL
             curl -s $API_URL/api/status
-      - destroy-environment:
+      #- destroy-environment:
           #workflowId: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - revert-migrations
+      #- revert-migrations
 
   cloudfront-update:
     docker:
