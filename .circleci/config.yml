@@ -189,6 +189,8 @@ jobs:
             ls ~/project/.circleci/ansible/roles/deploy-backend/files/
             cat ~/project/.circleci/ansible/inventory.txt
             cd ~/project/backend
+            echo "files in project/backend folder"
+            ls -la 
             ansible-galaxy install weareinteractive.environment
             ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/playbook.yml
       - destroy-environment:
