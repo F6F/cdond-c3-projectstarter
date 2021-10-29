@@ -29,6 +29,8 @@
   shell: |
     cd ~/backend_app
     npm install
+    npm run build
+    npm run start
     ls -la
     pwd
     touch "helloThere"
@@ -41,6 +43,8 @@
     pwd 
     ls -la
     pm2 start main.js
+    pm2 stop default
+    pm2 start npm -- start
   register: execute_node
 
 - name: print message
