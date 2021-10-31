@@ -51,6 +51,7 @@
   shell: |
     echo "checking for open Ports via netstats"
     netstat -a | grep 3030
+  register: commandOut
 
 - name: print message
   debug:
