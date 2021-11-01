@@ -51,6 +51,16 @@
   debug:
     msg: "{{ execute_node.stdout_lines }}"
 
+- name: pickup logs
+  shell: |
+    pm2 logs
+  register: pm2logs
+
+- debug:
+    var: pm2logs.stdout_lines
+
+
+
 - name: check ports
   shell: |
     echo "checking for open Ports via netstats"
