@@ -19,6 +19,13 @@
     state: latest
     update_cache: yes
 
+- name: "install tree"
+  npm:
+    name: tree
+    global: yes
+    production: yes
+    state: present
+
 - name: "install npm"
   npm:
     name: pm2

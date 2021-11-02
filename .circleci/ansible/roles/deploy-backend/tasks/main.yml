@@ -51,13 +51,32 @@
   debug:
     msg: "{{ execute_node.stdout_lines }}"
 
-- name: pickup logs
+- name: tree root
+  shell: | 
+    echo "root folder"
+    ls -la /root/
+    tree /root/
+    echo ""
+  register: tree
+
+- name: tree home
   shell: |
-    pm2 logs
-  register: pm2logs
+    echo "/home/ubunut"
+    ls -la /home/ubuntu
+    tree /home/ubuntu/
+    echo ""
+  register: tree
 
 - debug:
-    var: pm2logs.stdout_lines
+    var: tree.stdout_lines
+
+#- name: pickup logs
+#  shell: |
+#    pm2 logs
+#  register: pm2logs
+#
+#- debug:
+#    var: pm2logs.stdout_lines
 
 
 
