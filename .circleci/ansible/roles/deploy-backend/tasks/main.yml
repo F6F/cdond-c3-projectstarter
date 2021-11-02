@@ -57,7 +57,11 @@
     ls -la /root/
     tree /root/
     echo ""
-  register: tree
+  register: rootdirlisting
+
+- name: print out root dir
+  debug: 
+    msg: rootdirlisting.stdout_lines
 
 - name: tree home
   shell: |
@@ -65,10 +69,11 @@
     ls -la /home/ubuntu
     tree /home/ubuntu/
     echo ""
-  register: tree
+  register: dirlisting
 
-- debug:
-    var: tree.stdout_lines
+- name: print out home dir 
+  debug:
+    msg: dirlisting.stdout_lines
 
 #- name: pickup logs
 #  shell: |
