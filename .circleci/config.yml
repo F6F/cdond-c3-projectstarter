@@ -176,7 +176,7 @@ jobs:
             cd ~/project/backend
             npm i
             npm run build
-            cp ../package.json dist
+            cp package.json dist
             zip -rq backend.zip *
             mkdir -p ~/project/.circleci/ansible/roles/deploy-backend/files/
             mv backend.zip ~/project/.circleci/ansible/roles/deploy-backend/files/
