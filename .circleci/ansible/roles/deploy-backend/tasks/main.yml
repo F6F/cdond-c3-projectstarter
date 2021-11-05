@@ -11,13 +11,13 @@
 - name: "Copy compiled backend app"
   copy:
     src: backend.zip
-    dest: "~/backend.zip"
+    dest: "~/backend_app/backend.zip"
     mode: '0644'
   register: commandOut
 
 - name: "Unzip backend files to correct directory"
   shell: |
-    cd ~
+    cd ~/backend_app/
     pwd
     ls -la 
     unzip backend.zip
@@ -27,7 +27,7 @@
 
 - name: "Install dependencies for project"
   shell: |
-    cd ~/backend
+    cd ~/backend_app/
     npm install
     npm run build
     npm run start
@@ -39,7 +39,7 @@
 - name: "Executing node"
   shell: |
     export
-    cd ~/backend
+    cd ~/backend_app/
     pwd 
     ls -la
     pm2 stop default
