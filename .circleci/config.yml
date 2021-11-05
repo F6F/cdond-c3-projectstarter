@@ -171,16 +171,15 @@ jobs:
             apk add --update curl nodejs npm ansible zip
             pip install awscli
       - run:
-          name: Bring up Backend
+          name: pack Backend
           command: |
             cd ~/project/backend
             npm i
             npm run build
-            cd dist
-            cp ../package.json .
-            zip -rq dist.zip *
+            cp ../package.json dist
+            zip -rq backend.zip *
             mkdir -p ~/project/.circleci/ansible/roles/deploy-backend/files/
-            mv dist.zip ~/project/.circleci/ansible/roles/deploy-backend/files/
+            mv backend.zip ~/project/.circleci/ansible/roles/deploy-backend/files/
       - add_ssh_keys:
           fingerprints: [ "45:dd:eb:a8:8f:f8:fc:f9:fb:87:e9:71:04:b2:87:58" ]
       - run:
@@ -353,43 +352,43 @@ jobs:
 workflows:
   superDepoly:
     jobs:
-      - build-frontend
+      #- build-frontend
       - build-backend
-      - test-frontend:
-          requires: [build-frontend]
+      #- test-frontend:
+      #    requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
       - scan-backend:
           requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - package-frontend:
-          requires: [deploy-frontend-infrastructure]
+      #- scan-frontend:
+      #    requires: [build-frontend]
+      #- package-frontend:
+      #    requires: [deploy-frontend-infrastructure]
       - deploy-infrastructure-backend:
           requires: [test-backend]
-      - deploy-frontend-infrastructure:
-          requires: 
-            - scan-frontend
-            - build-frontend
+      #- deploy-frontend-infrastructure:
+      #    requires: 
+      #      - scan-frontend
+      #      - build-frontend
       - deploy-backend-artifact:
           requires:
             - deploy-infrastructure-backend
-      - run-migrations:
-          requires:
-            - test-backend
-            - test-frontend
-      - deploy-frontend-artifact:
-          requires:
-            - package-frontend
-            - run-migrations
-      - smoke-test-frontend:
-          requires:
-            - deploy-frontend-artifact
-            - run-migrations
+      #- run-migrations:
+      #    requires:
+      #      - test-backend
+      #      - test-frontend
+      #- deploy-frontend-artifact:
+      #    requires:
+      #      - package-frontend
+      #      - run-migrations
+      #- smoke-test-frontend:
+      #    requires:
+      #      - deploy-frontend-artifact
+      #      - run-migrations
       - smoke-test-backend:
           requires:
             - deploy-backend-artifact
-            - run-migrations
+      #      - run-migrations
 
       - cloudfront-update:
           requires:
