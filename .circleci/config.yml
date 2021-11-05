@@ -390,9 +390,9 @@ workflows:
             - deploy-backend-artifact
       #      - run-migrations
 
-      - cloudfront-update:
-          requires:
-            - smoke-test-frontend
-            - smoke-test-backend
+      #- cloudfront-update:
+      #    requires:
+      #      - smoke-test-frontend
+      #      - smoke-test-backend
 #      - cleanup:
 #          requires: [cloudfront-update]#
