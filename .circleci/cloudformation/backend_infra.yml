@@ -32,7 +32,7 @@ Resources:
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: TobiKey
-      ImageId: ami-0e63910157459607d
+      ImageId: ami-0b4b0a5bd04aec558
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
