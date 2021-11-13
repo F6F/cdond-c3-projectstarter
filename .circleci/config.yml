@@ -230,44 +230,113 @@ jobs:
             
 
    
-#
-#  deploy-frontend:
-#    docker:
-#      # Docker image here that supports AWS CLI
-#    steps:
-#      # Checkout code from git
+  
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+ 
+        - checkout
+        - add_ssh_keys:
+            fingerprints: [ "45:dd:eb:a8:8f:f8:fc:f9:fb:87:e9:71:04:b2:87:58" ]
+        - attach_workspace:
+            at: ~/
+        - run:
+            name: Install dependencies
+            command: |
+              apk update
+              apk upgrade
+              apk add unzip 
+              apk add curl
+              /usr/local/bin/python -m pip install --upgrade pip    
+        - run:
+            name: Install node
+            command: |
+              apk add --update nodejs nodejs-npm
+              node --version
+              npm --version
+        - run:
+            name: Install ansible
+            command: |
+              # your code here              
+              apk add --update ansible 
+              ansible --version
+        - run:
+            name: Install aws
+            command: |
+              # your code here              
+              # curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              # unzip awscliv2.zip
+              # ./aws/install -i /usr/local/aws -b /usr/local/bin/aws
+              # aws --version        
+              pip install awscli --upgrade   
+              aws --version       
+        - run:
+            name: Deploy backend
+            command: |
+              echo "cd backend -------"
+              cd backend
+              echo "npm install -------"
+              npm i
+              npm run build
+              cd ..
+              echo "zip the directory -------"
+              tar -C backend -czvf artifact.tar.gz .
+              echo "mv artifac to ansibble -------"
+              mv artifact.tar.gz .circleci/ansible/
+              cd .circleci/ansible
+              echo "Contents  of the inventory.txt file is -------"
+              cat inventory.txt
+              ansible-playbook -i inventory.txt deploy-backend.yml
+#        - revert-migrations:
+#            event: on_fail
+#            
+#        - destroy-environment:
+#            event: on_fail
+  
+  deploy-frontend:
+    docker:
+     - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: update
+          command: |  
+            sudo apt update && sudo apt upgrade            
+            sudo apt install curl
+      - run:
+          name: Install aws
+          command: |                        
+            sudo apt-get install python python-pip
+            sudo pip install awscli
+            aws --version
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].PublicIpAddress' --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --output text) 
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
+            cat frontend/.env
+            
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+#      - revert-migrations:
+#          event: on_fail
+#      - destroy-environment:
+#          event: on_fail
 #      - run:
-#          name: Install dependencies
+#          name: Build Success
+#          when: on_success
 #          command: |
-#            # your code here
-#      - run:
-#          name: Get backend url
-#          command: |
-#            # your code here
-#            export API_URL="http://${BACKEND_IP}:3030"
-#            echo "${API_URL}"
-#      - run:
-#          name: Deploy frontend objects
-#          command: |
-#            # your code here
-#      # Here's where you will add some code to rollback on failure      
-#                    
-#  deploy-backend:
-#    docker:
-#      # Docker image here that supports Ansible
-#    steps:
-#      # Checkout code from git
-#      # Add ssh keys with fingerprint
-#      # attach workspace
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # your code here
-#      - run:
-#          name: Deploy backend
-#          command: |
-#            # your code here
-#      # Here's where you will add some code to rollback on failure  
+#            curl -H "Content-Type: text/plain" -H "token: f8c96b04-eedf-4709-a46e-a229beb2abb0" --request PUT --data "1" https://api.memstash.io/values/frontend_${CIRCLE_WORKFLOW_ID:0:7}
+
 #
 #  smoke-test:
 #    docker:
@@ -349,10 +418,10 @@ workflows:
           requires: [deploy-infrastructure]
       - run-migrations:
           requires: [build-backend]
-#      - deploy-frontend:
-#          requires: [run-migrations, deploy-infrastructure, scan-frontend]
-#      - deploy-backend:
-#          requires: [run-migrations, deploy-infrastructure, scan-backend]
+      - deploy-frontend:
+          requires: [run-migrations, deploy-infrastructure, scan-frontend]
+      - deploy-backend:
+          requires: [run-migrations, deploy-infrastructure, scan-backend]
 #      - smoke-test:
 #          requires: [deploy-backend, deploy-frontend]
 #      - cloudfront-update:
