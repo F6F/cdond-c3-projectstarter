@@ -162,24 +162,47 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
 
-#  configure-infrastructure:
-#    docker:
-#      # Docker image here that supports Ansible
-#    steps:
-#      # Checkout code from git
-#      # Add ssh keys with fingerprint
-#      # attach workspace
-#      - run:
-#          name: Install dependencies
-#          command: |
-#            # Your code here
-#            exit 1
-#      - run:
-#          name: Configure server
-#          command: |
-#            # Your code here
-#            exit 1
-#      # Here's where you will add some code to rollback on failure      
+  configure-infrastructure:
+    docker:
+        - image: python:3.7-alpine3.11
+    steps:
+        - checkout
+        - add_ssh_keys:
+            fingerprints: [ "45:dd:eb:a8:8f:f8:fc:f9:fb:87:e9:71:04:b2:87:58" ]
+        - attach_workspace:
+            at: ~/
+        - run:
+            name: Install dependencies
+            command: |
+              apk update
+              apk upgrade
+              apk add unzip 
+              apk add curl
+              /usr/local/bin/python -m pip install --upgrade pip                    
+        - run:
+            name: Install ansible
+            command: |
+              apk add --update ansible 
+              ansible --version
+        - run:
+            name: Install aws
+            command: |
+              pip install awscli --upgrade   
+              aws --version       
+        - run:
+            name: Configure server
+            command: |
+              cd .circleci/ansible/ 
+              ansible-playbook -i inventory.txt configure-server.yml
+        - run:
+            name: Install node_exporter
+            command: |
+              cd .circleci/ansible/
+              ansible-playbook -i inventory.txt add-node-exporter.yml
+              
+        # Here's where you will add some code to rollback on failure   
+        - destroy-environment:
+              event: on_fail
 #
 #  run-migrations:
 #    docker:
@@ -312,8 +335,8 @@ workflows:
 #          filters:
 #            branches:
 #              only: [test-feature-branch]
-#      - configure-infrastructure:
-#          requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
 #      - run-migrations:
 #          requires: [configure-infrastructure]
 #      - deploy-frontend:
