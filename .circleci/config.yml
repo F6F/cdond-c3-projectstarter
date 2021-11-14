@@ -346,7 +346,7 @@ jobs:
           name: update
           command: |  
             #sudo apt update && sudo apt upgrade            
-            sudo apt install curl unzip python3 python python-pip node npm
+            sudo apt install curl unzip python python-pip  
             sudo pip install awscli
 
       - run:
