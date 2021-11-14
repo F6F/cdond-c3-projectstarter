@@ -343,11 +343,11 @@ jobs:
     steps:
       - checkout
       - run:
-      name: update
-      command: |  
-        sudo apt update && sudo apt upgrade            
-        sudo apt install curl unzip python3 python python-pip node npm
-        sudo pip install awscli
+          name: update
+          command: |  
+            sudo apt update && sudo apt upgrade            
+            sudo apt install curl unzip python3 python python-pip node npm
+            sudo pip install awscli
       - run:
           name: Install dependencies
           command: |
