@@ -29,7 +29,6 @@
     npm run build
 
 - name: runit
-  become: true
   shell: |   
     cd /home/ubuntu/backend
     pm2 start npm --name "backend" -- start
