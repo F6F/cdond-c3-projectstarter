@@ -20,6 +20,7 @@
   shell: |   
     cd /home/ubuntu/backend
     npm install
+    npm i -g pm2
 
 - name: build
   become: true
