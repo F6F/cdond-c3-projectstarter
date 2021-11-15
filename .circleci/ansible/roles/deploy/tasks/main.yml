@@ -20,18 +20,9 @@
   apt:
   name: npm pm2
 
-#- name: create env
-#  become: true
-#  shell: |
-#    cd /home/ubuntu/backend
-#    echo -e "NODE_ENV=local\nVERSION=1\nTYPEORM_CONNECTION=postgres\nTYPEORM_MIGRATIONS_DIR=./src/migrations\nTYPEORM_ENTITIES=./src/modules/domain/*/*/*.entity.ts\nTYPEORM_MIGRATIONS=./src/migrations/*.ts\n" > .env
-#    echo -e "TYPEORM_HOST=$TYPEORM_HOST\nTYPEORM_PORT=$TYPEORM_PORT\nTYPEORM_USERNAME=$TYPEORM_USERNAME\nTYPEORM_PASSWORD=$TYPEORM_PASSWORD\nTYPEORM_DATABASE=$TYPEORM_DATABASE\n" >> .env
-
 - name: Executing node
   become: true
   shell: |   
-
-    
     cd /home/ubuntu/backend
     npm install
     npm run build   
