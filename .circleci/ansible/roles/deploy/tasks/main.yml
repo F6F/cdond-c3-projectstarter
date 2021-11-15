@@ -15,10 +15,6 @@
     src: artifact.tar.gz
     dest: /home/ubuntu/backend
 
-- name: install deps
-  apt:
-    name: npm pm2
-
 - name: Executing node
   become: true
   shell: |   
