@@ -27,12 +27,6 @@
     cd /home/ubuntu/backend
     npm run build
 
-- name: stop default
-  become: true
-  shell: |   
-    cd /home/ubuntu/backend
-    pm2 stop default
-
 - name: runit
   become: true
   shell: |   
