@@ -15,10 +15,26 @@
     src: artifact.tar.gz
     dest: /home/ubuntu/backend
 
-- name: Executing node
+- name: install
   become: true
   shell: |   
     cd /home/ubuntu/backend
     npm install
-    npm run build
+
+- name: build
+  become: true
+  shell: |   
+    cd /home/ubuntu/backend
+    npm run build   
+
+- name: stop default
+  become: true
+  shell: |   
+    cd /home/ubuntu/backend
+    pm2 stop default
+
+- name: runit
+  become: true
+  shell: |   
+    cd /home/ubuntu/backend    
     pm2 start npm --name "backend" -- start
