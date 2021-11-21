@@ -1,37 +1,37 @@
 version: 2.1
-#
-#commands:
-#  destroy-environment:
-#    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-#    parameters:
-#      # Add parameter here   
-#    steps:
-#      - run:
-#          name: Destroy environments
-#          when: on_fail
-#          command: |
-#            # Your code here
-#            exit 1
-#
-#  revert-migrations:
-#    description: Revert the last migration if successfully run in the current workflow.
-#    parameters:
-#      # Add parameter here     
-#    steps:
-#      - run:
-#          name: Revert migrations
-#          # Add when this will run
-#          command: |
-#            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-#            SUCCESS = 1
-#            if(( $SUCCESS==1 )); 
-#            then
-#            #  cd ~/project/backend
-#            #  npm install
-#            #  Add revert code here. You can find this in the Getting Started section.
-#              exit 1
-#            fi
-#            
+
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    parameters:
+      # Add parameter here   
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            # Your code here
+            exit 1
+
+  revert-migrations:
+    description: Revert the last migration if successfully run in the current workflow.
+    parameters:
+      # Add parameter here     
+    steps:
+      - run:
+          name: Revert migrations
+          # Add when this will run
+          command: |
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
+            SUCCESS = 1
+            if(( $SUCCESS==1 )); 
+            then
+            #  cd ~/project/backend
+            #  npm install
+            #  Add revert code here. You can find this in the Getting Started section.
+              exit 1
+            fi
+            
 jobs:
   build-frontend:
     docker:
@@ -201,8 +201,8 @@ jobs:
               ansible-playbook -i inventory.txt add-node-exporter.yml
               
         # Here's where you will add some code to rollback on failure   
-#        - destroy-environment:
-#              event: on_fail
+        - destroy-environment:
+              event: on_fail
 
   run-migrations:
     docker:
@@ -228,9 +228,6 @@ jobs:
               curl -H "Content-Type: text/plain" -H "token: f8c96b04-eedf-4709-a46e-a229beb2abb0" --request PUT --data "0" https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7}
             fi
             
-
-   
-  
   deploy-backend:
     docker:
       - image: python:3.7-alpine3.11
@@ -283,11 +280,11 @@ jobs:
               echo "Contents  of the inventory.txt file is -------"
               cat inventory.txt
               ansible-playbook -i inventory.txt deploy-backend.yml
-#        - revert-migrations:
-#            event: on_fail
-#            
-#        - destroy-environment:
-#            event: on_fail
+        - revert-migrations:
+            event: on_fail
+            
+        - destroy-environment:
+            event: on_fail
   
   deploy-frontend:
     docker:
@@ -322,15 +319,15 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-#      - revert-migrations:
-#          event: on_fail
-#      - destroy-environment:
-#          event: on_fail
-#      - run:
-#          name: Build Success
-#          when: on_success
-#          command: |
-#            curl -H "Content-Type: text/plain" -H "token: f8c96b04-eedf-4709-a46e-a229beb2abb0" --request PUT --data "1" https://api.memstash.io/values/frontend_${CIRCLE_WORKFLOW_ID:0:7}
+      - revert-migrations:
+          event: on_fail
+      - destroy-environment:
+          event: on_fail
+      - run:
+          name: Build Success
+          when: on_success
+          command: |
+            curl -H "Content-Type: text/plain" -H "token: f8c96b04-eedf-4709-a46e-a229beb2abb0" --request PUT --data "1" https://api.memstash.io/values/frontend_${CIRCLE_WORKFLOW_ID:0:7}
 
   smoke-test:
     docker:
