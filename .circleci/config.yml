@@ -2,35 +2,54 @@ version: 2.1
 
 commands:
   destroy-environment:
-    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    description: Destroy back-end and front-end cloudformation stacks and S3 bucket given a workflow ID.   
     parameters:
-      # Add parameter here   
+      event:
+        type: string
+     # workflow_id:
+     #   type: string 
     steps:
       - run:
           name: Destroy environments
-          when: on_fail
+          when: << parameters.event >>
           command: |
-            # Your code here
-            exit 1
-
+            # Your code here                        
+            # aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            
+            FRONTEND=$(curl -H "token: f8c96b04-eedf-4709-a46e-a229beb2abb0" --request GET https://api.memstash.io/values/frontend_${CIRCLE_WORKFLOW_ID:0:7})
+            if [[ $FRONTEND == 1 ]];
+            then
+              echo "delete s3 'udapeople-${CIRCLE_WORKFLOW_ID:0:7}' content"
+              aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            fi
+            aws cloudformation delete-stack --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation delete-stack --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+            
   revert-migrations:
-    description: Revert the last migration if successfully run in the current workflow.
+    description: Revert the last migration if successfully run in the current workflow.  
     parameters:
-      # Add parameter here     
+      event:
+        type: string
+     # workflow_id:
+     #   type: string 
     steps:
       - run:
           name: Revert migrations
           # Add when this will run
+          when: << parameters.event >>
           command: |
-            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-            SUCCESS = 1
-            if(( $SUCCESS==1 )); 
+            # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable            
+            echo "Revert migrations started..."
+            SUCCESS=$(curl -H "token: f8c96b04-eedf-4709-a46e-a229beb2abb0" --request GET https://api.memstash.io/values/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            if [[ $SUCCESS == 1 ]];
             then
-            #  cd ~/project/backend
-            #  npm install
-            #  Add revert code here. You can find this in the Getting Started section.
-              exit 1
+              echo "roll back migration started"
+              cd ~/project/backend
+              npm install
+              npm run migrations:revert
+              echo "roll back migration completed"
             fi
+             echo "Revert migrations finish..."
             
 jobs:
   build-frontend:
