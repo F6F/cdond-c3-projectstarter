@@ -376,15 +376,19 @@ jobs:
       - run:
           name: Frontend smoke test.
           command: |
-            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website.eu-central-1.amazonaws.com/#/employees"            
             echo ${URL} 
             if curl -s ${URL} | grep "Welcome"
             then
-                # Change this to 0 after the job fails
               exit 0
             else
               exit 1
             fi
+
+      - revert-migrations:
+          event: on_fail
+      - destroy-environment:
+          event: on_fail
 
 #  cloudfront-update:
 #    docker:
