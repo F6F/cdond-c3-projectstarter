@@ -1,5 +1,7 @@
 ## Give your Application Auto-Deploy Superpowers
 
+Some new Text goes here
+
 In this project, you will prove your mastery of the following learning objectives:
 
 - Explain the fundamentals and benefits of CI/CD to achieve, build, and deploy automation for cloud-based software products.
